@@ -60,16 +60,13 @@ object BisectingKMeansExample {
   }
 
   def writeCostCsv(modelResult: Map[Int, (Double, Array[Vector])]) = {
-    val costString = modelResult.toSeq.sortBy(_._1).map {
-      case (idx, (cost, _)) =>
-        s"$idx;$cost\n".replace(".", ",")
+    val WSSSEString = modelResult.toSeq.sortBy(_._1).map {
+      case (idx, (wssse, _)) =>
+        s"$idx;$wssse\n".replace(".", ",")
     }
     val stringBuilder = new StringBuilder()
-    costString.foreach { stringBuilder.append(_) }
-    import java.nio.file.{ Paths, Files }
-    import java.nio.charset.StandardCharsets
-    Files.write(Paths.get(s"cost.csv"),
-                stringBuilder.toString.getBytes(StandardCharsets.UTF_8))
+    WSSSEString.foreach { stringBuilder.append(_) }
+    writeFile(stringBuilder.toString, "wssse.csv")
   }
   def writePredictionCsv(predictions: DataFrame) = {
     val predictionStrings =
@@ -81,9 +78,13 @@ object BisectingKMeansExample {
       }
     val stringBuilder = new StringBuilder()
     predictionStrings.foreach { stringBuilder.append(_) }
+    writeFile(stringBuilder.toString, "predictions.csv")
+  }
+
+  def writeFile(content: String, filename: String) = {
     import java.nio.file.{ Paths, Files }
     import java.nio.charset.StandardCharsets
-    Files.write(Paths.get(s"predictions.csv"),
-                stringBuilder.toString.getBytes(StandardCharsets.UTF_8))
+    Files
+      .write(Paths.get(s"$filename"), content.getBytes(StandardCharsets.UTF_8))
   }
 }
