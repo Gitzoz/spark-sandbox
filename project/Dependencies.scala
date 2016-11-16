@@ -3,7 +3,7 @@ import sbt._
 object Version {
   final val Scala     = "2.11.8"
   final val ScalaTest = "3.0.0"
-  final val Spark = "2.0.1"
+  final val Spark = "2.0.2"
   
 }
 
